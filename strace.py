@@ -5,6 +5,7 @@ import sys
 
 basic_parser = re.compile(r'^(?P<command>\w+)(?P<arguments>\(.*?\"(?P<path>.*?)\".*?\))\s+=.*\((?P<desc>.*?)\)')
 args_parser = { '{sa_family': re.compile(r'htons\((?P<port>\d+)\).*inet_addr\("(?P<ip>.*?)"\)'), # socket
+                'Operation now in progress': 'Operation in progress. Likely blocked waiting for SYN-ACK '
               }
 
 def trace(command):
@@ -27,17 +28,26 @@ def _filter(line):
 
     return _line
 
-def pretty(line):
+def parse_line(line):
     m = basic_parser.match(line)
     if not m:
         return "?? %s" % line
     args = m.group('arguments')
     for k, v in args_parser.items():
         if k in args:
-            m_args = v.search(args)
-            if m_args:
-                args = m_args.groupdict()
-    return "Executing '%s' on '%s' resulted in '%s'\targs: %s" % (m.group('command'), m.group('path'), m.group('desc'), args)
+            if isinstance(v, re._pattern_type):
+                m_args = v.search(args)
+                if m_args:
+                    args = m_args.groupdict()
+            elif isinstance(v, str):
+                args = v
+    ret = m.groupdict()
+    ret['arguments'] = args
+    return ret
+
+def pretty(line):
+    data = parse_line(line)
+    return "Executing '{command}' on '{path}' resulted in '{desc}'\targs: {arguments}".format(**data)
 
 def parse_arguments():
     if len(sys.argv) < 2:
