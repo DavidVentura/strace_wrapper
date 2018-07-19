@@ -48,7 +48,9 @@ def parse_line(line):
 
 def pretty(line):
     data = parse_line(line)
-    return "Executing '{command}' on '{path}' resulted in '{desc}'\targs: {arguments}".format(**data)
+    if isinstance(data, dict):
+        return "Executing '{command}' on '{path}' resulted in '{desc}'\targs: {arguments}".format(**data)
+    return data
 
 def parse_arguments():
     if len(sys.argv) < 2:
