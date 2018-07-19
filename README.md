@@ -11,7 +11,7 @@ Executing 'bind' on '0.0.0.0' resulted in 'Permission denied'   args: {'port': '
 
 ```
 $ ./strace.py cat /etc/shadow
-Executing 'open' on '/etc/shadow' resulted in 'Permission denied'       Full args: ("/etc/shadow", O_RDONLY)
+Executing 'open' on '/etc/shadow' resulted in 'Permission denied'       args: {'flags': 'O_RDONLY'}
 ```
 
 ```
