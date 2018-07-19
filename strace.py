@@ -10,7 +10,7 @@ args_parser = { '{sa_family': re.compile(r'htons\((?P<port>\d+)\).*inet_addr\("(
 def trace(command):
     strace = ['strace', '--']
     strace.extend(command)
-    proc = subprocess.Popen(strace, stderr=subprocess.PIPE)
+    proc = subprocess.Popen(strace, stderr=subprocess.PIPE, stdout=sys.stderr)
     for line in proc.stderr:
         yield line
 
