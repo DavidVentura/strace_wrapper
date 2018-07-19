@@ -5,7 +5,8 @@ import sys
 
 basic_parser = re.compile(r'^(?P<command>\w+)(?P<arguments>\(.*?\"(?P<path>.*?)\".*?\))\s+=.*\((?P<desc>.*?)\)')
 args_parser = { '{sa_family': re.compile(r'htons\((?P<port>\d+)\).*inet_addr\("(?P<ip>.*?)"\)'), # socket
-                'Operation now in progress': 'Operation in progress. Likely blocked waiting for SYN-ACK '
+                'Operation now in progress': 'Operation in progress. Likely blocked waiting for SYN-ACK ',
+                ', O_': re.compile(r'(?P<flags>(?:(?:O_[A-Z]+)\|?)+)'), # O_RDONLY|O_CLOEXEC...
               }
 
 def trace(command):
