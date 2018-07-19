@@ -6,7 +6,7 @@ Example usage:
 
 ```
 $ ./strace.py netcat -l -p 80
-Executing 'bind' on '0.0.0.0' resulted in 'Permission denied'   Full args: (3, {sa_family=AF_INET, sin_port=htons(80), sin_addr=inet_addr("0.0.0.0")
+Executing 'bind' on '0.0.0.0' resulted in 'Permission denied'   args: {'port': '80', 'ip': '0.0.0.0'}
 ```
 
 ```

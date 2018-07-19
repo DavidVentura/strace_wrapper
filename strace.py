@@ -3,7 +3,9 @@ import re
 import subprocess
 import sys
 
-basic_parser = re.compile(r'^(?P<command>\w+)(?P<arguments>\(.*?\"(?P<path>.*?)\".*?\)).*\((?P<desc>.*?)\)')
+basic_parser = re.compile(r'^(?P<command>\w+)(?P<arguments>\(.*?\"(?P<path>.*?)\".*?\))\s+=.*\((?P<desc>.*?)\)')
+args_parser = { '{sa_family': re.compile(r'htons\((?P<port>\d+)\).*inet_addr\("(?P<ip>.*?)"\)'), # socket
+              }
 
 def trace(command):
     strace = ['strace', '--']
@@ -29,7 +31,13 @@ def pretty(line):
     m = basic_parser.match(line)
     if not m:
         return "?? %s" % line
-    return "Executing '%s' on '%s' resulted in '%s'\tFull args: %s" % (m.group('command'), m.group('path'), m.group('desc'), m.group('arguments'))
+    args = m.group('arguments')
+    for k, v in args_parser.items():
+        if k in args:
+            m_args = v.search(args)
+            if m_args:
+                args = m_args.groupdict()
+    return "Executing '%s' on '%s' resulted in '%s'\targs: %s" % (m.group('command'), m.group('path'), m.group('desc'), args)
 
 def parse_arguments():
     if len(sys.argv) < 2:
