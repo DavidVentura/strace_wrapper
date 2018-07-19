@@ -17,7 +17,7 @@ def trace(command):
         yield line
 
 def _filter(line):
-    ignored_tokens = ['.so', 'LC_MESSAGES', '/selinux', 'ioctl(', 'LC_TIME']
+    ignored_tokens = ['.so', 'LC_MESSAGES', '/selinux', 'ioctl(', 'LC_TIME', ', F_OK)', ', X_OK)', '/usr/lib/sudo']
     _line = line.decode('ascii').rstrip()
 
     if '= -' not in _line:
